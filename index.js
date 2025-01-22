@@ -1,9 +1,8 @@
 const express = require('express')
 const app = express()
 
-app.use(express.json()) //for post requests
+app.use(express.json())
 
-//next task: automatic refresh
 const data = [
     { 
       "id": "1",
@@ -40,7 +39,7 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id //this is a string
+    const id = request.params.id
     const personFound = data.find(person => person.id === id)
     if (personFound) {
         response.json(personFound)
@@ -58,8 +57,22 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const entry = request.body
     entry.id = String(Math.round((Math.random() * 100)))
-    console.log(entry)
-    response.json(entry)
+    const alreadyExists = data.some(person => person.name === entry.name)
+
+    if (entry.name && entry.number && !alreadyExists) {
+        console.log('Success', entry)
+        response.json(entry)
+    }
+
+    if (!entry.name) {
+        response.statusMessage = 'Missing name'
+    } else if (!entry.number) {
+        response.statusMessage = 'Missing number'
+    } else if (alreadyExists) {
+        response.statusMessage = 'Name must be unique'
+    }
+
+    response.status(400).end()
 })
 
 const PORT = 3001
