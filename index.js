@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json()) //for post requests
+
 //next task: automatic refresh
 const data = [
     { 
@@ -41,10 +43,23 @@ app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id //this is a string
     const personFound = data.find(person => person.id === id)
     if (personFound) {
-        console.log('this runs?')
+        response.json(personFound)
     } else {
         response.status(404).end()
     }
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    data.filter(person => person.id !== id)
+    response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const entry = request.body
+    entry.id = String(Math.round((Math.random() * 100)))
+    console.log(entry)
+    response.json(entry)
 })
 
 const PORT = 3001
