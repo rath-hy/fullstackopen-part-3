@@ -6,8 +6,13 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf dist && cd ../notes-frontend/ && npm run build && cp -r dist ../notes-backend",
+    "deploy": "fly deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",    
+    "logs:prod": "fly logs"
   },
+  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rath-hy/fullstackopen-part-3.git"
@@ -19,10 +24,12 @@
   },
   "homepage": "https://github.com/rath-hy/fullstackopen-part-3#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.3",
     "nodemon": "^3.1.9"
   }
 }
