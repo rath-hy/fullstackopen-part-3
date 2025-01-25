@@ -14,13 +14,43 @@ mongoose.connect(url)
   })
 
 
+const numberValidator = (number) => {
+  // console.log('Number validator called!');
+  const splitNumbers = number.split("-")
+
+  if (splitNumbers.length !== 2) {
+    return false
+  }
+
+  const firstPart = splitNumbers[0]
+  const secondPart = splitNumbers[1]
+
+  if (firstPart.length !== 2 || firstPart.length !== 3) {
+    return false
+  }
+
+  if (typeof(parseInt(firstPart)) !== 'number' || typeof(parseInt(secondPart)) !== 'number') {
+    return false
+  }
+
+  return true;
+}
+
 const personSchema = new mongoose.Schema({
     name: {
       type: String, 
       minLength: 5,
       required: true,
     },
-    number: String,
+    number: {
+      type: String,
+      minLength: 8,
+      validate: {
+        validator: numberValidator, 
+        message: 'Invalid number.',
+      },
+      required: true,
+    }
 })
 
 personSchema.set('toJSON', {
